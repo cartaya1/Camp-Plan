@@ -24,7 +24,7 @@ $(document).ready(function () {
     let parkName;
     let parkCity;
     let weatherCard;
-    
+
 
     const imgs = ['assets/img/Alaska.jpg', 'assets/img/GrandCanyon.jpg',
         'assets/img/nPark.jpg', 'assets/img/Rockies.jpg', 'assets/img/Yosemite.jpg'];
@@ -92,7 +92,6 @@ $(document).ready(function () {
 
     // display data acquired from API
     function displayData(park) {
-        // console.log(park.name);
 
         parkName = park.name;
 
@@ -128,25 +127,23 @@ $(document).ready(function () {
 
         // create another card for weather content;
 
-        weatherCard = document.createElement('div');
-        weatherCard.classList.add('.card-content')
-        item.append(weatherCard);
-                
-        console.log("CARD:",weatherCard);
+        //weatherCard = document.createElement('div');
+        //weatherCard.classList.add('.card-content')
+        //item.append(weatherCard);
+        //console.log(userInput);       
 
-        forecast(parkCity);
 
         // getting activities for each park
 
         $.getJSON(`https://developer.nps.gov/api/v1/parks?q=${parkName}&api_key=${npsKey}`, function (data) {
 
             let activities = data.data[0].activities;
-            console.log(activities);
-            
+            let forecastCity = data.data[0].addreses[0].city.name;
+
             // creating a div and adding a list to it with each activity
             let listActivities = document.createElement('div');
             listActivities.classList.add('custom-modal', 'hidden');
-            
+
             // gets activitites from APi and add to the div
             cardContent.append(listActivities);
 
@@ -165,93 +162,99 @@ $(document).ready(function () {
         console.log('click, click, clicking ®️Dan');
         e.target.nextSibling.classList.toggle('hidden');
     })
-    
-// output current weather
 
-$(document).ready(function () {
-    var userInput = citiesArray[citiesArray.length - 1];
-    var userInput = (forecastCity);
-    console.log(userInput,"1th Test");
-    forecast(userInput);
-    
-});
-function forecast(userInput) {
-    //console.log(userInput);
-    rowCards.empty();
-    var fore5 = $("<h3>").attr("class", "forecast").text("");
+    // output current weather
 
-    //the error is here can read name for city
-    
-    var forecastURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + userInput + "&units=imperial&APPID=fb3dd2a5acdd03a900a040c7940d4846&units=imperial";
-    $.ajax({
-        url: forecastURL,
-    }).then(function (response) {
-        
-        for (var i = 0; i < response.list.length; i += 8) {
+    $(document).ready(function () {
+        var userInput = citiesArray[citiesArray.length - 1];
+        var userInput = (forecastCity);
 
-        forecastCity = response.city.name;
-        forecastDate[i] = response.list[i].dt_txt;
-        forecastIcon[i] = response.list[i].weather[0].icon;
-        forecastTemp[i] = response.list[i].main.temp;
-        forecastWind[i] = response.list[i].wind.speed;
-        forecastHum[i] = response.list[i].main.humidity;
-        
-            var weatherCard = $("<div>").attr("class", "max-width: 12rem;");
-            rowCards.append(weatherCard);
+        $.getJSON(`https://developer.nps.gov/api/v1/parks?q=${parkName}&api_key=${npsKey}`, function (data) {
 
-            var newDivCard = $("<div>").attr("class", "card text-white bg-primary");
-            newDivCard.attr("style", "max-width: 12rem;")
-            weatherCard.append(newDivCard);
-        
-            var newCardBody = $("<div>").attr("class", "card-body");
-            weatherCard.append(newCardBody);
+            
+            let userInput=(data.data[0].addreses[0].name)
 
-            var newH5 = $("<h5>").attr("class", "card-title").text(moment(forecastDate[i]).format("MMM Do"));
-            newCardBody.append(newH5);
 
-            var newImg = $("<img>").attr("class", "card-img-top").attr("src", "https://openweathermap.org/img/wn/" + forecastIcon[i] + "@2x.png");
-            newCardBody.append(newImg);
+            console.log(userInput, "1th Test");
 
-            var newPTemp = $("<p>").attr("class", "card-text").text("Temp: " + Math.floor(forecastTemp[i]) + "ºF");
-            newCardBody.append(newPTemp);
-
-            var newPWind = $("<p>").attr("class", "card-text").text("Wind: " + forecastWind[i] + " MPH");
-            newCardBody.append(newPWind);
-
-            var newPHum = $("<p>").attr("class", "card-text").text("Hum: " + forecastHum[i] + "%");
-            newCardBody.append(newPHum);
-        
-            weatherCard.append(fore5);
-        }
-        console.log("Local City:",forecastCity);
-        console.log(forecastURL, "test"); 
         });
+        function forecast(userInput) {
+            rowCards.empty();
+            var fore5 = $("<h3>").attr("class", "forecast").text("");
+
+            //the error is here can read name for city
+
+            var forecastURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + userInput + "&units=imperial&APPID=fb3dd2a5acdd03a900a040c7940d4846";
+            $.ajax({
+                url: forecastURL,
+            }).then(function (response) {
+
+                for (var i = 0; i < response.list.length; i += 8) {
+
+                    forecastCity = response.city.name;
+                    forecastDate[i] = response.list[i].dt_txt;
+                    forecastIcon[i] = response.list[i].weather[0].icon;
+                    forecastTemp[i] = response.list[i].main.temp;
+                    forecastWind[i] = response.list[i].wind.speed;
+                    forecastHum[i] = response.list[i].main.humidity;
+
+                    var weatherCard = $("<div>").attr("class", "max-width: 12rem;");
+                    rowCards.append(weatherCard);
+
+                    var newDivCard = $("<div>").attr("class", "card text-white bg-primary");
+                    newDivCard.attr("style", "max-width: 12rem;")
+                    weatherCard.append(newDivCard);
+
+                    var newCardBody = $("<div>").attr("class", "card-body");
+                    weatherCard.append(newCardBody);
+
+                    var newH5 = $("<h5>").attr("class", "card-title").text(moment(forecastDate[i]).format("MMM Do"));
+                    newCardBody.append(newH5);
+
+                    var newImg = $("<img>").attr("class", "card-img-top").attr("src", "https://openweathermap.org/img/wn/" + forecastIcon[i] + "@2x.png");
+                    newCardBody.append(newImg);
+
+                    var newPTemp = $("<p>").attr("class", "card-text").text("Temp: " + Math.floor(forecastTemp[i]) + "ºF");
+                    newCardBody.append(newPTemp);
+
+                    var newPWind = $("<p>").attr("class", "card-text").text("Wind: " + forecastWind[i] + " MPH");
+                    newCardBody.append(newPWind);
+
+                    var newPHum = $("<p>").attr("class", "card-text").text("Hum: " + forecastHum[i] + "%");
+                    newCardBody.append(newPHum);
+
+                    weatherCard.append(fore5);
+                }
+                console.log("Local City:", forecastCity);
+                console.log(forecastURL, "test");
+            });
+        }
+    });
+
+    function storeData(userInput) {
+        var userInput = $("#searchInput").val().trim().toLowerCase();
+        var containsCity = false;
+        if (citiesArray != null) {
+            $(citiesArray).each(function (x) {
+                if (citiesArray[x] === userInput) {
+                    containsCity = true;
+                }
+            });
+        }
+        if (containsCity === false) {
+            citiesArray.push(userInput);
+        }
+        localStorage.setItem("Saved City", JSON.stringify(citiesArray));
     }
+
+    $(".btn").on("click", function (event) {
+        console.log(event, "2");
+        event.preventDefault();
+        if ($("#searchInput").val() === "") {
+            alert("Please type a userInput to know the current weather");
+        } else
+            var userInput = $("#searchInput").val().trim().toLowerCase();
+        forecast(userInput);
+        $("#searchInput").val(forecastCity);
+    })
 });
-
-function storeData (userInput) {
-     var userInput = $("#searchInput").val().trim().toLowerCase();
-     var containsCity = false;
-     if (citiesArray != null) {
-         $(citiesArray).each(function(x) {
-             if (citiesArray[x] === userInput) {
-                 containsCity = true;
-             }
-         });
-     }
-     if (containsCity === false) {
-         citiesArray.push(userInput);
-     }
-    localStorage.setItem("Saved City", JSON.stringify(citiesArray));
-}
-
-$(".btn").on("click", function (event){
-    console.log(event,"2");
-    event.preventDefault();
-    if ($("#searchInput").val() === "") {
-    alert("Please type a userInput to know the current weather");
-    } else
-    var userInput = $("#searchInput").val().trim().toLowerCase();
-    forecast(userInput);
-    $("#searchInput").val(forecastCity);
-})

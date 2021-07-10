@@ -15,19 +15,17 @@ $(document).ready(function (){
     var userInput = citiesArray[citiesArray.length - 1];
     forecast(userInput);
 });
-function currentWeather(userInput) {
-   console.log(userInput);
-   }
-
 function forecast (userInput) {
-    
     rowCards.empty();
     var fore5 = $("<h3>").attr("class", "forecast").text(""); 
     var forecastURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + userInput + "&units=imperial&APPID=fb3dd2a5acdd03a900a040c7940d4846";
+    console.log(userInput);
     $.ajax({
         url: forecastURL,
     }).then(function(response){
-        console.log(response);
+
+        console.log(response);// test line
+        
         for (var i = 0; i < response.list.length; i += 8){
             
             forecastCity = response.city.name;
@@ -36,8 +34,7 @@ function forecast (userInput) {
             forecastTemp[i] = response.list[i].main.temp; 
             forecastWind[i] = response.list[i].wind.speed;
             forecastHum[i] = response.list[i].main.humidity;  
-            console.log(forecastCity);
-
+            
             var newCol2 = $("<div>").attr("class", "max-width: 12rem;");
             rowCards.append(newCol2);
 

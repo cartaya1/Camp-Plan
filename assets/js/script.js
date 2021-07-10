@@ -182,7 +182,7 @@ function forecast(userInput) {
 
     //the error is here can read name for city
     
-    var forecastURL = `https://api.openweathermap.org/data/2.5/forecast?q=${userInput}&units=imperial&APPID=fb3dd2a5acdd03a900a040c7940d4846&units=imperial`;
+    var forecastURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + userInput + "&units=imperial&APPID=fb3dd2a5acdd03a900a040c7940d4846&units=imperial";
     $.ajax({
         url: forecastURL,
     }).then(function (response) {
@@ -253,5 +253,5 @@ $(".btn").on("click", function (event){
     } else
     var userInput = $("#searchInput").val().trim().toLowerCase();
     forecast(userInput);
-    $("#searchInput").val("");
+    $("#searchInput").val(forecastCity);
 })

@@ -1,5 +1,5 @@
 'use strict'
-// var cityResultText = $("#cityResult");
+var cityResultText = {};
 var rowCards = $("#rowCards");
 var dayForecast = $("#row5day");
 var forecastDate = {};
@@ -167,21 +167,21 @@ $(document).ready(function () {
     })
     
 // output current weather
+
 $(document).ready(function () {
     var userInput = citiesArray[citiesArray.length - 1];
-    //var userInput =searchInput;
-    console.log(userInput,"PRIMERO");
+    var userInput = (forecastCity);
+    console.log(userInput,"1th Test");
     forecast(userInput);
-    console.log(userInput,"OTRO");
-
+    
 });
-//function currentWeather(userInput) {
-    //console.log(userInput);
-//}
 function forecast(userInput) {
     //console.log(userInput);
     rowCards.empty();
     var fore5 = $("<h3>").attr("class", "forecast").text("");
+
+    //the error is here can read name for city
+    
     var forecastURL = `https://api.openweathermap.org/data/2.5/forecast?q=${userInput}&units=imperial&APPID=fb3dd2a5acdd03a900a040c7940d4846&units=imperial`;
     $.ajax({
         url: forecastURL,
@@ -196,18 +196,15 @@ function forecast(userInput) {
         forecastWind[i] = response.list[i].wind.speed;
         forecastHum[i] = response.list[i].main.humidity;
         
-        console.log("Local City:",forecastCity);
-        console.log(forecastURL, "test");    
-
             var weatherCard = $("<div>").attr("class", "max-width: 12rem;");
             rowCards.append(weatherCard);
 
             var newDivCard = $("<div>").attr("class", "card text-white bg-primary");
             newDivCard.attr("style", "max-width: 12rem;")
             weatherCard.append(newDivCard);
-
+        
             var newCardBody = $("<div>").attr("class", "card-body");
-            newDivCard.append(newCardBody);
+            weatherCard.append(newCardBody);
 
             var newH5 = $("<h5>").attr("class", "card-title").text(moment(forecastDate[i]).format("MMM Do"));
             newCardBody.append(newH5);
@@ -223,11 +220,15 @@ function forecast(userInput) {
 
             var newPHum = $("<p>").attr("class", "card-text").text("Hum: " + forecastHum[i] + "%");
             newCardBody.append(newPHum);
+        
+            weatherCard.append(fore5);
+        }
+        console.log("Local City:",forecastCity);
+        console.log(forecastURL, "test"); 
+        });
+    }
+});
 
-            dayForecast.append(fore5);
-        };
-    })
-}
 function storeData (userInput) {
      var userInput = $("#searchInput").val().trim().toLowerCase();
      var containsCity = false;
@@ -251,10 +252,6 @@ $(".btn").on("click", function (event){
     alert("Please type a userInput to know the current weather");
     } else
     var userInput = $("#searchInput").val().trim().toLowerCase();
-//     currentWeather(userInput);
     forecast(userInput);
-//     storeData();
-//     lastSearch();
     $("#searchInput").val("");
 })
-});

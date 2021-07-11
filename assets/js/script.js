@@ -1,40 +1,39 @@
-'use strict'
-var cityResultText = {};
-var rowCards = $("#rowCards");
-var dayForecast = $("#row5day");
-var forecastDate = {};
-var forecastIcon = {};
-var forecastTemp = {};
-var forecastWind = {};
-var forecastHum = {};
-var forecastCity = {};
-var today = moment().format('MM' + "/" + 'DD' + '/' + 'YYYY');
-var APIKey = "&APPID=fb3dd2a5acdd03a900a040c7940d4846&units=imperial";
-var url = "https://api.openweathermap.org/data/2.5/";
-var citiesArray = JSON.parse(localStorage.getItem("Saved City")) || [];
-
-
+"use strict"
 $(document).ready(function () {
+    
+    let cityResultText = {};
+    
+    let dayForecast = $("#row5day");
+    let forecastDate = {};
+    let forecastIcon = {};
+    let forecastTemp = {};
+    let forecastWind = {};
+    let forecastHum = {};
+    let forecastCity = {};
+    let today = moment().format("MM" + "/" + "DD" + "/" + "YYYY");
+    let APIKey = "&APPID=fb3dd2a5acdd03a900a040c7940d4846&units=imperial";
+    let url = "https://api.openweathermap.org/data/2.5/";
 
-    const changeBackgroundEl = $('.hero');
-    const npsKey = 'h6tXDWnmFLuDQHAPIhnXzQKP5pBX66EKu0vrNdFn';
-    const searchInput = $('#searchBar');
-    const searchSubmit = $('#input-field');
+    let citiesArray = JSON.parse(localStorage.getItem("Saved City")) || [];
+    const changeBackgroundEl = $(".hero");
+    const npsKey = "h6tXDWnmFLuDQHAPIhnXzQKP5pBX66EKu0vrNdFn";
+    const searchInput = $("#searchBar");
+    const searchSubmit = $("#input-field");
 
     let parkName;
     let parkCity;
-    let weatherCard;
+    // let weatherCard;
 
 
-    const imgs = ['assets/img/Alaska.jpg', 'assets/img/GrandCanyon.jpg',
-        'assets/img/nPark.jpg', 'assets/img/Rockies.jpg', 'assets/img/Yosemite.jpg'];
+    const imgs = ["assets/img/Alaska.jpg", "assets/img/GrandCanyon.jpg",
+        "assets/img/nPark.jpg", "assets/img/Rockies.jpg", "assets/img/Yosemite.jpg"];
 
-    changeBackgroundEl.attr('src', `${imgs[0]}`);
+    changeBackgroundEl.attr("src", `${imgs[0]}`);
 
     let i = 1;
 
     // fades out first image
-    var timerOut = setTimeout(() => {
+    let timerOut = setTimeout(() => {
         changeBackgroundEl.fadeOut(1000, $);
 
     }, 7000)
@@ -46,18 +45,18 @@ $(document).ready(function () {
 
         if (i < 5) {
             // fades in new image
-            changeBackgroundEl.attr('src', `${imgs[i]}`).fadeIn(1000, $);
+            changeBackgroundEl.attr("src", `${imgs[i]}`).fadeIn(1000, $);
             i++;
             //  fades out the new image after 6 secs
-            var timerOut = setTimeout(() => {
+            let timerOut = setTimeout(() => {
                 changeBackgroundEl.fadeOut(1000, $);
 
             }, 7000)
             // else to resets index value.
         } else {
             i = 1
-            changeBackgroundEl.attr('src', `${imgs[0]}`).fadeIn(1000, $);
-            var timerOut = setTimeout(() => {
+            changeBackgroundEl.attr("src", `${imgs[0]}`).fadeIn(1000, $);
+            let timerOut = setTimeout(() => {
                 changeBackgroundEl.fadeOut(1000, $);
 
             }, 7000)
@@ -85,8 +84,6 @@ $(document).ready(function () {
             })
         // search for specific park part
     }
-
-
     searchSubmit.submit(fetchParkData);
 
 
@@ -94,167 +91,139 @@ $(document).ready(function () {
     function displayData(park) {
 
         parkName = park.name;
+        parkCity = park.addresses[0].city;
 
-        let parkList = $('#park-list');
+        let parkList = $("#park-list");
         // create div for the column and attach to the main div container
-        let item = document.createElement('div');
-        item.classList.add('col', 'card', 'custom-card');
+
+        let item = $("<div>").addClass("col custom-card"); //change custom-card class on css later to container
         parkList.append(item);
+        // card title
+        let itemCard = $("<div>").addClass("card-title").text(parkName);
+        item.append(itemCard);
+        // card button
+        let infoBtn = $("<button>").addClass("show-modal custom-button").text("More Info");
+        item.append(infoBtn);
 
         // div to add the card to
-        let cardContent = document.createElement('div');
-        cardContent.classList.add('card-content');
-        item.append(cardContent);
+        let bigCardContent = $("<div>").addClass("row-12 hidden");
+        item.append(bigCardContent);
+       
+
+        // creates a card for the city
+
+        let listCard = $ ("<div>").addClass("card col-2");
+        bigCardContent.append(listCard);
 
 
+        
         // create card for each park and attach to park list div
-        let itemCard = document.createElement('div');
-        itemCard.classList.add('card-title');
-        itemCard.textContent = parkName;
-        cardContent.append(itemCard);
-
-        // card-action div
-        let cardAction = document.createElement('div');
-        cardAction.classList.add('card-action');
-        cardContent.append(cardAction);
-
+      
         //create button for each city and attach it to the park name
 
-        let infoBtn = document.createElement('button');
-        infoBtn.classList.add('show-modal', 'custom-button');
-        infoBtn.textContent = 'More Info';
-        cardContent.append(infoBtn);
-
-        // create another card for weather content;
-
-        //weatherCard = document.createElement('div');
-        //weatherCard.classList.add('.card-content')
-        //item.append(weatherCard);
-        //console.log(userInput);       
-
-
-        // getting activities for each park
 
         $.getJSON(`https://developer.nps.gov/api/v1/parks?q=${parkName}&api_key=${npsKey}`, function (data) {
 
             let activities = data.data[0].activities;
-            let forecastCity = data.data[0].addreses[0].city.name;
+            
 
             // creating a div and adding a list to it with each activity
-            let listActivities = document.createElement('div');
-            listActivities.classList.add('custom-modal', 'hidden');
+            let listActivities = $("<div>");
 
             // gets activitites from APi and add to the div
-            cardContent.append(listActivities);
-
+            
             for (let i = 0; i < activities.length; i++) {
                 let parkActivities = activities[i].name;
-
-                let newActivity = document.createElement('li');
-                newActivity.textContent = parkActivities;
+                
+                let newActivity = $("<li>").text(parkActivities);
                 listActivities.append(newActivity);
-
+                
             }
-
-        })
-    }
-    $(document).on("click", ".show-modal", function (e) {
-        console.log('click, click, clicking ®️Dan');
-        e.target.nextSibling.classList.toggle('hidden');
-    })
-
-    // output current weather
-
-    $(document).ready(function () {
-        var userInput = citiesArray[citiesArray.length - 1];
-        var userInput = (forecastCity);
-
-        $.getJSON(`https://developer.nps.gov/api/v1/parks?q=${parkName}&api_key=${npsKey}`, function (data) {
-
+            listCard.append(listActivities);
             
-            let userInput=(data.data[0].addreses[0].name)
+        })
+            ;
 
 
-            console.log(userInput, "1th Test");
+    //    add weather Data for each park on -9 space
+        let rowCards = $("<div>").addClass("card col-8");
 
-        });
-        function forecast(userInput) {
-            rowCards.empty();
-            var fore5 = $("<h3>").attr("class", "forecast").text("");
-
-            //the error is here can read name for city
-
-            var forecastURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + userInput + "&units=imperial&APPID=fb3dd2a5acdd03a900a040c7940d4846";
+           
+            let weatherCard = $("<div>").addClass("row").attr("id", "custom-format");
+            rowCards.append(weatherCard);
+           
+    
+            let forecastURL = `https://api.openweathermap.org/data/2.5/forecast?q=${parkCity}&units=imperial&APPID=fb3dd2a5acdd03a900a040c7940d4846`;
             $.ajax({
                 url: forecastURL,
             }).then(function (response) {
+                // creating card for weather
 
-                for (var i = 0; i < response.list.length; i += 8) {
-
+                for (let i = 0; i < response.list.length; i += 8) {
+    
                     forecastCity = response.city.name;
                     forecastDate[i] = response.list[i].dt_txt;
                     forecastIcon[i] = response.list[i].weather[0].icon;
                     forecastTemp[i] = response.list[i].main.temp;
                     forecastWind[i] = response.list[i].wind.speed;
                     forecastHum[i] = response.list[i].main.humidity;
-
-                    var weatherCard = $("<div>").attr("class", "max-width: 12rem;");
-                    rowCards.append(weatherCard);
-
-                    var newDivCard = $("<div>").attr("class", "card text-white bg-primary");
-                    newDivCard.attr("style", "max-width: 12rem;")
+    
+                    
+    
+                    let newDivCard = $("<div>").addClass("card text-white bg-primary col").css({"max-width": "12rem"});
                     weatherCard.append(newDivCard);
-
-                    var newCardBody = $("<div>").attr("class", "card-body");
-                    weatherCard.append(newCardBody);
-
-                    var newH5 = $("<h5>").attr("class", "card-title").text(moment(forecastDate[i]).format("MMM Do"));
+    
+                    let newCardBody = $("<div>").addClass("card-content");
+                    newDivCard.append(newCardBody);
+    
+                    let newH5 = $("<h5>").addClass("card-title").text(moment(forecastDate[i]).format("MMM Do"));
                     newCardBody.append(newH5);
-
-                    var newImg = $("<img>").attr("class", "card-img-top").attr("src", "https://openweathermap.org/img/wn/" + forecastIcon[i] + "@2x.png");
+    
+                    let newImg = $("<img>").addClass("card-img-top").attr("src", `https://openweathermap.org/img/wn/${forecastIcon[i]}@2x.png`);
                     newCardBody.append(newImg);
-
-                    var newPTemp = $("<p>").attr("class", "card-text").text("Temp: " + Math.floor(forecastTemp[i]) + "ºF");
+    
+                    let newPTemp = $("<p>").addClass("card-text").text(`Temp: ${Math.floor(forecastTemp[i])}ºF`);
                     newCardBody.append(newPTemp);
-
-                    var newPWind = $("<p>").attr("class", "card-text").text("Wind: " + forecastWind[i] + " MPH");
+    
+                    let newPWind = $("<p>").addClass("card-text").text(`Wind: ${forecastWind[i]} MPH`);
                     newCardBody.append(newPWind);
-
-                    var newPHum = $("<p>").attr("class", "card-text").text("Hum: " + forecastHum[i] + "%");
-                    newCardBody.append(newPHum);
-
-                    weatherCard.append(fore5);
+    
+                    let newPHum = $("<p>").addClass("card-text").text(`Hum: ${forecastHum[i]} %`);
+                    newCardBody.append(newPHum);                    
+                    
                 }
-                console.log("Local City:", forecastCity);
-                console.log(forecastURL, "test");
+     
             });
-        }
-    });
+       
 
-    function storeData(userInput) {
-        var userInput = $("#searchInput").val().trim().toLowerCase();
-        var containsCity = false;
+        bigCardContent.append(rowCards);
+
+        
+    }
+    $(document).on("click", ".show-modal", function (e) {
+        console.log("click, click, clicking ®️Dan");
+        e.target.nextSibling.classList.toggle("hidden");
+    })
+
+
+    
+
+    // remember to call it after everything is working
+    function storeData(locStorage) {
+        let inputStorage = $("#searchInput").val().trim().toLowerCase();
+        let containsCity = false;
         if (citiesArray != null) {
             $(citiesArray).each(function (x) {
-                if (citiesArray[x] === userInput) {
+                if (citiesArray[x] === inputStorage) {
                     containsCity = true;
                 }
             });
         }
         if (containsCity === false) {
-            citiesArray.push(userInput);
+            citiesArray.push(inputStorage);
         }
         localStorage.setItem("Saved City", JSON.stringify(citiesArray));
     }
 
-    $(".btn").on("click", function (event) {
-        console.log(event, "2");
-        event.preventDefault();
-        if ($("#searchInput").val() === "") {
-            alert("Please type a userInput to know the current weather");
-        } else
-            var userInput = $("#searchInput").val().trim().toLowerCase();
-        forecast(userInput);
-        $("#searchInput").val(forecastCity);
-    })
+ 
 });

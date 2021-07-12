@@ -1,16 +1,16 @@
 "use strict"
 $(document).ready(function () {
     
-    let cityResultText = {};
+    //let cityResultText = {};
     
-    let dayForecast = $("#row5day");
+    //let dayForecast = $("#row5day");
     let forecastDate = {};
     let forecastIcon = {};
     let forecastTemp = {};
     let forecastWind = {};
     let forecastHum = {};
     let forecastCity = {};
-    let today = moment().format("MM" + "/" + "DD" + "/" + "YYYY");
+    //let today = moment().format("MM" + "/" + "DD" + "/" + "YYYY");
     let APIKey = "&APPID=fb3dd2a5acdd03a900a040c7940d4846&units=imperial";
     let url = "https://api.openweathermap.org/data/2.5/";
 
@@ -23,7 +23,6 @@ $(document).ready(function () {
     let parkName;
     let parkCity;
     // let weatherCard;
-
 
     const imgs = ["assets/img/Alaska.jpg", "assets/img/GrandCanyon.jpg",
         "assets/img/nPark.jpg", "assets/img/Rockies.jpg", "assets/img/Yosemite.jpg"];
@@ -77,21 +76,18 @@ $(document).ready(function () {
                 return response.json();
             })
             .then(function (data) {
-
                 // calling each park name
                 data.data.forEach(displayData)
 
             })
         // search for specific park part
     }
-
-
     searchSubmit.submit(fetchParkData);
-
+    
 
     // display data acquired from API
     function displayData(park) {
-
+        
         parkName = park.name;
         parkCity = park.addresses[0].city;
 
@@ -140,18 +136,14 @@ $(document).ready(function () {
             }
             listCard.append(listActivities);
             
-        })
-            ;
-
+        });
+        
 
     //    add weather Data for each park on -9 space
         let rowCards = $("<div>").addClass("card col-8");
-
-       
     
             let weatherCard = $("<div>").addClass("row").attr("id", "custom-format");
             rowCards.append(weatherCard);
-            
     
             let forecastURL = `https://api.openweathermap.org/data/2.5/forecast?q=${parkCity}&units=imperial&APPID=fb3dd2a5acdd03a900a040c7940d4846`;
             $.ajax({
@@ -167,8 +159,6 @@ $(document).ready(function () {
                     forecastTemp[i] = response.list[i].main.temp;
                     forecastWind[i] = response.list[i].wind.speed;
                     forecastHum[i] = response.list[i].main.humidity;
-    
-                    
     
                     let newDivCard = $("<div>").addClass("card text-white bg-primary col").css({"max-width": "12rem"});
                     weatherCard.append(newDivCard);
@@ -190,25 +180,16 @@ $(document).ready(function () {
     
                     let newPHum = $("<p>").addClass("card-text").text(`Hum: ${forecastHum[i]} %`);
                     newCardBody.append(newPHum);                    
-                    
                 }
-     
             });
-       
-
         bigCardContent.append(rowCards);
-        
         storeData(parkName);
-        
     }
+   
     $(document).on("click", ".show-modal", function (e) {
         console.log("click, click, clicking ®️Dan");
         e.target.nextSibling.classList.toggle("hidden");
     })
-
-
-    
-
     // remember to call it after everything is working
     function storeData(locStorage) {
         console.log(locStorage);
@@ -226,7 +207,4 @@ $(document).ready(function () {
         }
         localStorage.setItem("Saved City", JSON.stringify(citiesArray));
     }
-
- 
 });
-{"mode":"full","isActive":false}

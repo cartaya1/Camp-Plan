@@ -84,6 +84,8 @@ $(document).ready(function () {
             })
         // search for specific park part
     }
+
+
     searchSubmit.submit(fetchParkData);
 
 
@@ -99,10 +101,10 @@ $(document).ready(function () {
         let item = $("<div>").addClass("col custom-card"); //change custom-card class on css later to container
         parkList.append(item);
         // card title
-        let itemCard = $("<div>").addClass("card-title").text(parkName);
+        let itemCard = $("<h3>").addClass("card-title").text(parkName);
         item.append(itemCard);
         // card button
-        let infoBtn = $("<button>").addClass("show-modal custom-button").text("More Info");
+        let infoBtn = $("<button>").addClass("show-modal custom-button waves-effect waves-light btn").text("More Info");
         item.append(infoBtn);
 
         // div to add the card to
@@ -119,9 +121,6 @@ $(document).ready(function () {
         
         // create card for each park and attach to park list div
       
-        //create button for each city and attach it to the park name
-
-
         $.getJSON(`https://developer.nps.gov/api/v1/parks?q=${parkName}&api_key=${npsKey}`, function (data) {
 
             let activities = data.data[0].activities;
@@ -148,10 +147,11 @@ $(document).ready(function () {
     //    add weather Data for each park on -9 space
         let rowCards = $("<div>").addClass("card col-8");
 
-           
+       
+    
             let weatherCard = $("<div>").addClass("row").attr("id", "custom-format");
             rowCards.append(weatherCard);
-           
+            
     
             let forecastURL = `https://api.openweathermap.org/data/2.5/forecast?q=${parkCity}&units=imperial&APPID=fb3dd2a5acdd03a900a040c7940d4846`;
             $.ajax({
@@ -197,7 +197,8 @@ $(document).ready(function () {
        
 
         bigCardContent.append(rowCards);
-
+        
+        storeData(parkName);
         
     }
     $(document).on("click", ".show-modal", function (e) {
@@ -210,7 +211,8 @@ $(document).ready(function () {
 
     // remember to call it after everything is working
     function storeData(locStorage) {
-        let inputStorage = $("#searchInput").val().trim().toLowerCase();
+        console.log(locStorage);
+        let inputStorage = locStorage.toLowerCase();
         let containsCity = false;
         if (citiesArray != null) {
             $(citiesArray).each(function (x) {
@@ -227,3 +229,4 @@ $(document).ready(function () {
 
  
 });
+{"mode":"full","isActive":false}

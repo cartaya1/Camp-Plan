@@ -26,16 +26,20 @@ body {
     padding: 0;
 }
 
+
 header{
+    display: flex;
     background-color: var(--secondary);
     height: 15vh;  
     width: 100%;
     align-items: center;
     margin: 0;
-    padding: 0;
+    padding-top: 3rem;
+    z-index: 10;
 }
 
 .hero{
+    display: flex;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -46,14 +50,16 @@ header{
 }
 
 #input-field{
-    position: absolute;
     top: 160px;
     width: 33%;
     display: flex;
     flex: 0 0 100%;
-    flex-flow: row wrap;
+    flex-flow: wrap;
     justify-content: center;
-
+    align-items: center;
+    position: absolute;
+    right: 35%;
+    top: 20%;
     background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5));
 }
 
@@ -91,6 +97,7 @@ i{
 h1{
     font-size: 3.5rem;
     margin: 0;
+    z-index: 20;
 }
 
 h2{
@@ -131,14 +138,26 @@ li{
 
 
 .custom-card{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5));
+    margin: 2rem;
+    min-height: 6rem;
+    flex: 1 1 96%;
+    width: 96%;
+    padding: 2rem;
+    border-radius: 5px;
+    box-shadow: 0 2rem 3rem rgba(0, 0, 0, 0.4);   
 }
 
-.custom-button{
-    background: var(--complimentary);
+.btn{
+    background: var(--tertiary);
     font-weight: bold;
-    max-height: 3rem;
-    width: 9rem;
+    min-height: 3rem;
+    width: 8rem;
+    margin-left: 1rem;
+    margin-bottom: 0.5rem;
 }
 
 .custom-button:hover {
@@ -154,9 +173,39 @@ li{
 .card{
     margin:0;
     align-content: space-between;  
-    flex-wrap: nowrap;  
+    flex-wrap: wrap;  
+    
 }
 
 #custom-format{    
     justify-content: space-between;
 }
+
+#park-list{
+    display: flex;
+    flex-wrap: wrap;    
+    width: auto;   
+    padding: 1rem;
+    flex: 1 0 96%; 
+}
+
+footer{
+    display: flex;
+    justify-content: center;    
+    font-size: 1.5rem;
+    width: 20%;
+    margin: 2rem auto;
+    border-bottom: 3px solid var(--complimentary);
+}
+
+a{
+    color: whitesmoke;
+    display: flex;
+    text-decoration: none;
+}
+
+a:hover{
+    font-size: larger;
+    color: var(--complimentary2);
+}
+{"mode":"full","isActive":false}
